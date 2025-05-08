@@ -16,4 +16,19 @@ public class TaskDto {
     private String description;
     @JsonProperty("userId")
     private Long userId;
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (title != null) {
+            stringBuilder.append("title: ").append(title);
+        }
+        if (description != null) {
+            stringBuilder.append("description: ").append(description);
+        }
+        if (userId != null) {
+            stringBuilder.append("user ID: ").append(userId);
+        }
+        return stringBuilder.toString();
+    }
 }

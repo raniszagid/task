@@ -9,3 +9,33 @@ spring:
   liquibase:
     enabled: true
     change-log: db/changelog/db.changelog-master.xml
+  mail:
+    host: smtp.yandex.ru
+    port: 587
+    username:
+    password:
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+kafka:
+  bootstrap:
+    server: ${KAFKA_SERVER:localhost:9092}
+  consumer:
+    group-id: kafka-group
+    max.poll.records: 10
+    session-timeout: 10000
+    heartbeat.interval: 3000
+  producer:
+    enable: true
+  topic:
+    updates: updated_tasks
+  listener:
+    poll-timeout: 1000
+mail:
+  from:
+  to:

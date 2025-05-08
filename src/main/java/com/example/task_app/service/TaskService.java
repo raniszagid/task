@@ -1,5 +1,6 @@
 package com.example.task_app.service;
 
+import com.example.task_app.kafka.UpdateLogProducer;
 import com.example.task_app.mapper.TaskMapper;
 import com.example.task_app.model.Task;
 import com.example.task_app.model.dto.TaskDto;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
+    private final UpdateLogProducer updateLogProducer;
 
     public void save(Task task) {
         taskRepository.save(task);
@@ -43,6 +45,7 @@ public class TaskService {
             if (fresh.getUserId() != null) {
                 old.setUserId(fresh.getUserId());
             }
+            updateLogProducer.send(fresh, id);
             taskRepository.save(old);
         }
         else {
