@@ -1,5 +1,6 @@
 package com.example.task_app.model;
 
+import com.example.task_app.model.enums.TaskStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,4 +22,7 @@ public class Task {
     private String description;
     @Column(name = "user_id")
     private Long userId;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
 }

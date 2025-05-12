@@ -4,6 +4,7 @@ import com.example.task_app.kafka.UpdateLogProducer;
 import com.example.task_app.mapper.TaskMapper;
 import com.example.task_app.model.Task;
 import com.example.task_app.model.dto.TaskDto;
+import com.example.task_app.model.enums.TaskStatus;
 import com.example.task_app.repository.TaskRepository;
 import com.example.task_app.validation.TaskNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +29,12 @@ public class TaskService {
     }
 
     public TaskDto findById(Long id) {
-        Optional<Task> optionalTask = taskRepository.findById(id);
-        return taskMapper.toDto(optionalTask.orElseThrow(TaskNotFoundException::new));
+        Task task = taskRepository.findById(id).orElseThrow(TaskNotFoundException::new);
+        return taskMapper.toDto(task);
     }
 
     public void update(TaskDto fresh, Long id) {
-        Optional<Task> oldOptional = taskRepository.findById(id);
-        if (oldOptional.isPresent()) {
-            Task old = oldOptional.get();
+        Task old = taskRepository.findById(id).orElseThrow(TaskNotFoundException::new);
             if (fresh.getTitle() != null) {
                 old.setTitle(fresh.getTitle());
             }
@@ -45,12 +44,11 @@ public class TaskService {
             if (fresh.getUserId() != null) {
                 old.setUserId(fresh.getUserId());
             }
-            updateLogProducer.send(fresh, id);
+            if (fresh.getStatus() != null) {
+                old.setStatus(TaskStatus.valueOf(fresh.getStatus()));
+            }
             taskRepository.save(old);
-        }
-        else {
-            throw new TaskNotFoundException();
-        }
+            updateLogProducer.send(fresh, id);
     }
 
     public void delete(Long id) {

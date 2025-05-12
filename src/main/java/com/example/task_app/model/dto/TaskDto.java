@@ -16,6 +16,8 @@ public class TaskDto {
     private String description;
     @JsonProperty("userId")
     private Long userId;
+    @JsonProperty("status")
+    private String status;
 
     @Override
     public String toString() {
@@ -28,6 +30,9 @@ public class TaskDto {
         }
         if (userId != null) {
             stringBuilder.append("user ID: ").append(userId);
+        }
+        if (status != null) {
+            stringBuilder.append("status: ").append(status);
         }
         return stringBuilder.toString();
     }
