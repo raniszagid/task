@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: task_app
+  datasource:
+    url: "jdbc:postgresql://localhost:5433/task_db" # для запуска в docker 'db:5432'; для локального 'localhost:5433'
+    username: "postgres"
+    password: "postgres"
+    driverClassName: org.postgresql.Driver
+  liquibase:
+    enabled: true
+    change-log: db/changelog/db.changelog-master.xml
+  mail:
+    host: smtp.yandex.ru
+    port: 587
+    username:
+    password:
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+kafka:
+  bootstrap:
+    server: ${KAFKA_SERVER:localhost:9092}
+  consumer:
+    group-id: kafka-group
+    max.poll.records: 10
+    session-timeout: 10000
+    heartbeat.interval: 3000
+  producer:
+    enable: true
+  topic:
+    updates: updated_tasks
+  listener:
+    poll-timeout: 1000
+mail:
+  from:
+  to:
