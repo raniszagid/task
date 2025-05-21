@@ -56,4 +56,24 @@ public class TaskServiceTest {
         assertEquals(2, taskService.findAll().size());
         assertEquals("title1", taskService.findAll().getFirst().getTitle());
     }
+
+    @Test
+    void updateTask() {
+        Task task = Task.builder().id(1L).title("title1").status(TaskStatus.NEW).build();
+        when(taskRepositoryMock.findById(any())).thenReturn(Optional.of(task));
+        TaskDto fresh = TaskDto.builder().status("PROCESSING").build();
+        TaskService taskService = new TaskService(taskRepositoryMock, taskMapperMock, updateLogProducerMock);
+        taskService.update(fresh, 1L);
+
+        assertTrue(taskRepositoryMock.findById(1L).isPresent());
+        assertEquals(taskRepositoryMock.findById(1L).get().getStatus(), TaskStatus.PROCESSING);
+    }
+
+    @Test
+    void updateTaskNotFound() {
+        when(taskRepositoryMock.findById(any())).thenReturn(Optional.empty());
+        TaskService taskService = new TaskService(taskRepositoryMock, taskMapperMock, updateLogProducerMock);
+        Executable executable = () -> taskService.update(TaskDto.builder().status("NEW").build(), 4L);
+        assertThrows(TaskNotFoundException.class, executable);
+    }
 }

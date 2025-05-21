@@ -48,7 +48,7 @@ public class TaskService {
                 old.setStatus(TaskStatus.valueOf(fresh.getStatus()));
             }
             taskRepository.save(old);
-            //updateLogProducer.send(fresh, id);
+            updateLogProducer.send(fresh, id);
     }
 
     public void delete(Long id) {
