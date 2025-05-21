@@ -12,7 +12,7 @@ public class TaskMapper {
                 .title(dto.getTitle())
                 .description(dto.getDescription())
                 .userId(dto.getUserId())
-                .status(TaskStatus.valueOf(dto.getStatus()))
+                .status(dto.getStatus() == null ? TaskStatus.NEW : TaskStatus.valueOf(dto.getStatus()))
                 .build();
     }
 

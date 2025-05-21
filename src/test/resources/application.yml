@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: task_app
+  datasource:
+    url: jdbc:tc:postgresql:16:///test_db
+    driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
+  liquibase:
+    enabled: false
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  mail:
+    host: smtp.yandex.ru
+    port: 587
+    username:
+    password:
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+kafka:
+  bootstrap:
+    server: ${KAFKA_SERVER:localhost:9092}
+  consumer:
+    group-id: kafka-group
+    max.poll.records: 10
+    session-timeout: 10000
+    heartbeat.interval: 3000
+  producer:
+    enable: true
+  topic:
+    updates: updated_tasks
+  listener:
+    poll-timeout: 1000
+mail:
+  from:
+  to:
