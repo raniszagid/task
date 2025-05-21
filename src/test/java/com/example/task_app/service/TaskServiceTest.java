@@ -6,13 +6,15 @@ import com.example.task_app.model.Task;
 import com.example.task_app.model.dto.TaskDto;
 import com.example.task_app.model.enums.TaskStatus;
 import com.example.task_app.repository.TaskRepository;
+import com.example.task_app.validation.TaskNotFoundException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mockito;
 
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -34,5 +36,24 @@ public class TaskServiceTest {
         assertNotNull(taskDto);
         assertEquals("title", taskDto.getTitle());
         assertEquals("NEW", taskDto.getStatus());
+    }
+
+    @Test
+    void findByIdNotFound() {
+        when(taskRepositoryMock.findById(any())).thenReturn(Optional.empty());
+        TaskService taskService = new TaskService(taskRepositoryMock, taskMapperMock, updateLogProducerMock);
+        Executable executable = () -> taskService.findById(4L);
+        assertThrows(TaskNotFoundException.class, executable);
+    }
+
+    @Test
+    void findAll() {
+        when(taskRepositoryMock.findAll()).thenReturn(List.of(
+                Task.builder().title("title1").status(TaskStatus.PROCESSING).build(),
+                Task.builder().title("title2").status(TaskStatus.NEW).build()
+        ));
+        TaskService taskService = new TaskService(taskRepositoryMock, taskMapperMock, updateLogProducerMock);
+        assertEquals(2, taskService.findAll().size());
+        assertEquals("title1", taskService.findAll().getFirst().getTitle());
     }
 }
